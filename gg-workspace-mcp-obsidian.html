@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Sáu Bước Nối Google Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&display=swap">
+
+<style>
+  :root {
+    --ground:      #F2F5F9;
+    --surface:     #FFFFFF;
+    --surface-2:   #E9EEF5;
+    --ink:         #131820;
+    --ink-2:       #5C6878;
+    --ink-3:       #8A94A3;
+    --rule:        #D7DEE8;
+    --rule-strong: #B9C4D2;
+    --key:         #A45A06;
+    --key-soft:    #F2E3CE;
+    --data:        #0B6A66;
+    --data-soft:   #D6EAE7;
+
+    --display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", "Cascadia Mono", Consolas, monospace;
+
+    --maxw: 940px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0D1117;
+      --surface:     #151B24;
+      --surface-2:   #1D242F;
+      --ink:         #E6ECF4;
+      --ink-2:       #98A4B5;
+      --ink-3:       #6E7A8B;
+      --rule:        #242C38;
+      --rule-strong: #37414F;
+      --key:         #E7A445;
+      --key-soft:    #3A2C15;
+      --data:        #4FC0B5;
+      --data-soft:   #12312F;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #0D1117;
+    --surface:     #151B24;
+    --surface-2:   #1D242F;
+    --ink:         #E6ECF4;
+    --ink-2:       #98A4B5;
+    --ink-3:       #6E7A8B;
+    --rule:        #242C38;
+    --rule-strong: #37414F;
+    --key:         #E7A445;
+    --key-soft:    #3A2C15;
+    --data:        #4FC0B5;
+    --data-soft:   #12312F;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 40px 24px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  /* ---------- header ---------- */
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(30px, 5.4vw, 46px);
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .lede {
+    margin: 14px 0 0;
+    max-width: 60ch;
+    color: var(--ink-2);
+    font-size: 16px;
+  }
+
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- thesis numbers ---------- */
+
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 30px;
+  }
+
+  .fig {
+    background: var(--surface);
+    padding: 16px 18px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .fig .n {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 27px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fig:first-child .n { color: var(--key); }
+
+  .fig .l {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    line-height: 1.35;
+  }
+
+  @media (max-width: 620px) {
+    .figures { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- phase ---------- */
+
+  .phase-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .phase-head .tag {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--surface);
+    background: var(--ink);
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .phase-head h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.012em;
+    margin: 0;
+  }
+
+  .phase-head .when {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+
+  section { display: flex; flex-direction: column; gap: 0; }
+
+  /* ---------- steps ---------- */
+
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 0 20px;
+    padding: 22px 0 24px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .step:last-of-type { border-bottom: none; }
+
+  .step .num {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    color: var(--key);
+    padding-top: 2px;
+    position: relative;
+  }
+
+  /* the connecting line down the gutter */
+  .step .num::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 26px;
+    bottom: -26px;
+    width: 1px;
+    background: var(--rule-strong);
+  }
+
+  .step:last-of-type .num::after { display: none; }
+
+  .step h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+
+  .step p {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+
+  .step p + p { margin-top: 8px; }
+
+  .step strong { color: var(--ink); font-weight: 600; }
+
+  .plain {
+    color: var(--ink);
+    font-size: 15.5px;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.87em;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  .path {
+    display: block;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.5;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--key);
+    border-radius: 2px;
+    padding: 9px 12px;
+    margin-top: 12px;
+    overflow-x: auto;
+    white-space: pre;
+    color: var(--ink-2);
+  }
+
+  .path b { color: var(--ink); font-weight: 500; }
+
+  /* scope chips */
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 13px;
+  }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 3px 8px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    color: var(--ink-2);
+    background: var(--surface);
+  }
+
+  .chip.on {
+    border-color: var(--key);
+    color: var(--key);
+    background: var(--key-soft);
+  }
+
+  /* ---------- diagram ---------- */
+
+  .diagram-block {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 20px 0 8px;
+    margin-top: 18px;
+  }
+
+  .diagram-scroll { overflow-x: auto; }
+
+  .diagram-scroll svg { display: block; min-width: 660px; margin: 0 auto; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 4px 20px 12px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+
+  .swatch { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+
+  /* ---------- evidence ---------- */
+
+  .evidence {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .evidence th {
+    text-align: left;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 0 14px 8px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .evidence td {
+    padding: 11px 14px 11px 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-2);
+    vertical-align: top;
+  }
+
+  .evidence td:first-child {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .evidence td:last-child { padding-right: 0; }
+
+  .table-scroll { overflow-x: auto; }
+  .table-scroll table { min-width: 520px; }
+
+  /* ---------- note ---------- */
+
+  .note {
+    border: 1px solid var(--rule-strong);
+    border-top: 3px solid var(--key);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 18px 20px;
+  }
+
+  .note h4 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0 0 7px;
+    color: var(--ink);
+  }
+
+  .note p { margin: 0; color: var(--ink-2); max-width: 66ch; }
+  .note p + p { margin-top: 9px; }
+  .note a { color: var(--key); text-decoration: underline; text-underline-offset: 2px; }
+  .note a:focus-visible { outline: 2px solid var(--key); outline-offset: 3px; border-radius: 2px; }
+
+  footer {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-3);
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+    line-height: 1.7;
+  }
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Personal AI OS · Obsidian ↔ Google</p>
+    <h1>Một lần quẹt thẻ, mở mười một cửa</h1>
+    <p class="lede">Bạn thuê một <b>người phiên dịch</b> và đưa nó thẻ ra vào tòa nhà Google. Claude không giữ thẻ, không biết mật khẩu — Claude chỉ nhờ phiên dịch đi lấy. Đây là sáu bước dựng và vận hành cái thẻ đó.</p>
+
+    <div class="figures">
+      <div class="fig"><span class="n">1</span><span class="l">lần bấm đồng ý</span></div>
+      <div class="fig"><span class="n">39</span><span class="l">quyền được cấp</span></div>
+      <div class="fig"><span class="n">11</span><span class="l">dịch vụ mở ra</span></div>
+      <div class="fig"><span class="n">45</span><span class="l">tool Claude gọi được</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="phase-head">
+      <span class="tag">Phần A</span>
+      <h2>Dựng — làm một lần</h2>
+      <span class="when">01/09/2026</span>
+    </div>
+
+    <div class="step">
+      <div class="num">01</div>
+      <div>
+        <h3>Xin giấy giới thiệu ở Google Cloud Console</h3>
+        <p class="plain">Tạo một OAuth Client loại Desktop. Google trả về hai chuỗi.</p>
+        <p>Đây mới là <strong>giấy giới thiệu của ứng dụng</strong>, chưa phải quyền vào hộp thư. Nó chỉ nói "phần mềm này là ai", không nói "được phép làm gì".</p>
+        <span class="path"><b>GOOGLE_OAUTH_CLIENT_ID</b>      · danh tính ứng dụng
+<b>GOOGLE_OAUTH_CLIENT_SECRET</b>  · chữ ký chứng minh</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">02</div>
+      <div>
+        <h3>Cài server trung gian — người phiên dịch</h3>
+        <p class="plain">Gói <code>workspace-mcp</code>, cài bằng <code>uv</code>, ra một file chạy được.</p>
+        <p>Một bên nó nói <strong>tiếng MCP</strong> với Claude, bên kia nói <strong>tiếng REST API</strong> với Google. Không có nó, hai bên không hiểu nhau.</p>
+        <span class="path">C:\Users\OTS\AppData\Roaming\uv\tools\workspace-mcp\Scripts\<b>workspace-mcp.exe</b></span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">03</div>
+      <div>
+        <h3>Khai báo trong <code>~/.claude.json</code></h3>
+        <p class="plain">Chỉ chỗ cho Claude biết phiên dịch ngồi đâu và mở bằng lệnh nào.</p>
+        <p><code>stdio</code> nghĩa là hai bên nói chuyện qua <strong>đường ống vào/ra của tiến trình</strong>, không qua mạng — không cổng, không URL, không ai nghe lén được ở giữa. <code>--tool-tier core</code> là lý do ra 45 tool chứ không phải toàn bộ.</p>
+        <span class="path">"google-workspace": {
+  "type": <b>"stdio"</b>,
+  "command": "…\workspace-mcp.exe",
+  "args": [<b>"--single-user"</b>, <b>"--tool-tier", "core"</b>],
+  "env": { CLIENT_ID, CLIENT_SECRET }
+}</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">04</div>
+      <div>
+        <h3>Đăng nhập — đúng một lần</h3>
+        <p class="plain">Server mở trình duyệt. Bạn đăng nhập, thấy màn hình Google hỏi cho phép, bấm đồng ý.</p>
+        <p>Google trả một mã. Server đổi mã lấy <strong>access token</strong> (ngắn hạn, hết hạn sau khoảng một giờ) và <strong>refresh token</strong> (dài hạn, dùng để tự xin token mới), rồi cất cả hai vào một file trên máy bạn.</p>
+        <span class="path">~/.google_workspace_mcp/credentials/<b>tnkhanhlong0201@gmail.com.json</b></span>
+        <p style="margin-top:14px"><strong>Đây chính là chỗ "1 lần đăng nhập" anh Tùng nói.</strong> Một màn hình đồng ý duy nhất cấp 39 quyền, phủ 11 dịch vụ — không phải nối Gmail xong rồi quay lại nối Calendar.</p>
+        <div class="chips">
+          <span class="chip on">Gmail</span>
+          <span class="chip on">Calendar</span>
+          <span class="chip">Drive</span>
+          <span class="chip">Docs</span>
+          <span class="chip">Sheets</span>
+          <span class="chip">Slides</span>
+          <span class="chip">Forms</span>
+          <span class="chip">Tasks</span>
+          <span class="chip">Contacts</span>
+          <span class="chip">Chat</span>
+          <span class="chip">Apps Script</span>
+        </div>
+        <p style="margin-top:11px;font-size:13px;color:var(--ink-3)">Tô đậm = hai dịch vụ daily brief đang dùng thật. Chín cái còn lại đã cấp quyền, chưa khai thác.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="phase-head">
+      <span class="tag">Phần B</span>
+      <h2>Chạy — lặp lại mỗi lần</h2>
+      <span class="when">mỗi phiên</span>
+    </div>
+
+    <div class="step">
+      <div class="num">05</div>
+      <div>
+        <h3>Mở phiên — phiên dịch trình diện</h3>
+        <p class="plain">Claude Code khởi động, chạy file <code>.exe</code> đó lên như một tiến trình con.</p>
+        <p>Hai bên bắt tay theo giao thức MCP. Server khai danh sách việc mình làm được: <strong>"tôi có 45 tool"</strong>. Đây đúng là lúc bạn thấy dòng <code>google-workspace</code> đang kết nối khi mở phiên.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">06</div>
+      <div>
+        <h3>Gọi một tool — vòng đi và về</h3>
+        <p class="plain">Sáng 03/09, khi daily brief cần hộp thư, sáu chặng sau chạy trong khoảng một giây.</p>
+
+        <div class="diagram-block">
+          <div class="diagram-scroll">
+            <svg viewBox="0 0 720 412" width="100%" height="412" role="img" aria-label="Sơ đồ sáu chặng: Claude gửi lệnh sang server, server làm mới token, gọi API Google, Google trả JSON, server trả kết quả về Claude.">
+              <defs>
+                <marker id="ak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--key)"></path>
+                </marker>
+                <marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--data)"></path>
+                </marker>
+              </defs>
+
+              <!-- lane headers -->
+              <text x="92" y="26" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600" fill="var(--ink)">Claude</text>
+              <text x="92" y="44" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--ink-3)">người hỏi</text>
+
+              <text x="360" y="26" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600" fill="var(--ink)">workspace-mcp</text>
+              <text x="360" y="44" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--ink-3)">phiên dịch · giữ thẻ</text>
+
+              <text x="628" y="26" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600" fill="var(--ink)">Google</text>
+              <text x="628" y="44" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--ink-3)">kho dữ liệu</text>
+
+              <!-- lane lines -->
+              <line x1="92" y1="58" x2="92" y2="392" stroke="var(--rule-strong)" stroke-width="1"></line>
+              <line x1="360" y1="58" x2="360" y2="392" stroke="var(--rule-strong)" stroke-width="1"></line>
+              <line x1="628" y1="58" x2="628" y2="392" stroke="var(--rule-strong)" stroke-width="1"></line>
+
+              <!-- hop 1 -->
+              <text x="226" y="86" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink-2)"><tspan fill="var(--key)" font-weight="500">1</tspan>  gửi lệnh search_gmail_messages</text>
+              <line x1="92" y1="98" x2="352" y2="98" stroke="var(--key)" stroke-width="1.6" marker-end="url(#ak)"></line>
+
+              <!-- hop 2 -->
+              <text x="226" y="140" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink-2)"><tspan fill="var(--key)" font-weight="500">2</tspan>  đóng gói JSON-RPC, ghi vào ống stdio</text>
+              <line x1="92" y1="152" x2="352" y2="152" stroke="var(--key)" stroke-width="1.6" marker-end="url(#ak)"></line>
+
+              <!-- hop 3 : self loop at server -->
+              <path d="M 360 190 C 408 190 408 232 366 232" fill="none" stroke="var(--key)" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#ak)"></path>
+              <text x="424" y="200" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink-2)"><tspan fill="var(--key)" font-weight="500">3</tspan>  token hết hạn</text>
+              <text x="424" y="216" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink-2)">   refresh, không hỏi bạn</text>
+
+              <!-- hop 4 -->
+              <text x="494" y="264" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink-2)"><tspan fill="var(--key)" font-weight="500">4</tspan>  gọi API messages.list</text>
+              <line x1="360" y1="276" x2="620" y2="276" stroke="var(--key)" stroke-width="1.6" marker-end="url(#ak)"></line>
+
+              <!-- hop 5 -->
+              <text x="494" y="318" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink-2)"><tspan fill="var(--data)" font-weight="500">5</tspan>  trả về JSON</text>
+              <line x1="628" y1="330" x2="368" y2="330" stroke="var(--data)" stroke-width="1.6" marker-end="url(#ad)"></line>
+
+              <!-- hop 6 -->
+              <text x="226" y="372" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink-2)"><tspan fill="var(--data)" font-weight="500">6</tspan>  Claude đọc kết quả</text>
+              <line x1="360" y1="384" x2="100" y2="384" stroke="var(--data)" stroke-width="1.6" marker-end="url(#ad)"></line>
+            </svg>
+          </div>
+          <div class="legend">
+            <span><i class="swatch" style="background:var(--key)"></i> chặng đi · lệnh và thẻ</span>
+            <span><i class="swatch" style="background:var(--data)"></i> chặng về · dữ liệu</span>
+          </div>
+        </div>
+
+        <p style="margin-top:16px"><strong>Điểm mấu chốt nằm ở chặng 3.</strong> Thẻ tự gia hạn. Bạn bấm đồng ý một lần hồi 01/09, từ đó mỗi sáng brief chạy mà không hỏi lại bạn câu nào.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="phase-head">
+      <span class="tag">Bằng chứng</span>
+      <h2>Dấu vết trên máy bạn</h2>
+    </div>
+    <div class="table-scroll">
+      <table class="evidence">
+        <thead>
+          <tr><th>Dấu vết</th><th>Nghĩa là gì</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01/09 16:20</td>
+            <td>thư mục <code>credentials/</code> sinh ra — ngày bạn bấm đồng ý lần đầu</td>
+          </tr>
+          <tr>
+            <td>01/09 16:55</td>
+            <td>file <code>.readonly.bak</code> — lần cấp quyền đầu chỉ đọc, sau mới nâng lên đọc-ghi</td>
+          </tr>
+          <tr>
+            <td>03/09 10:20</td>
+            <td>file token được sửa — refresh token tự làm mới <strong>đúng lúc daily brief chạy sáng nay</strong></td>
+          </tr>
+          <tr>
+            <td>01/09 14:19</td>
+            <td>Gmail nhận thư "Cảnh báo bảo mật" từ Google — nhiều khả năng chính là màn hình bạn vừa bấm đồng ý</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="note">
+    <h4>Một điều cần biết — không phải để dọa</h4>
+    <p>Trong 39 quyền có <code>gmail.send</code>, <code>drive</code>, <code>documents</code>, <code>spreadsheets</code> — tức <strong>quyền ghi</strong>, không chỉ đọc. Về mặt kỹ thuật, phiên dịch gửi được mail và sửa được file Drive của bạn.</p>
+    <p>Cái chặn hiện không nằm ở Google, mà nằm ở luật trong <code>me.md</code>: <em>"Luôn soạn email và đưa xem trước khi gửi — không bao giờ gửi khi chưa duyệt."</em> Muốn chặn cứng ở tầng kỹ thuật thì thu hồi quyền tại <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a> rồi cấp lại chỉ nhóm <code>.readonly</code> — bản <code>.bak</code> ngày 01/09 chính là cấu hình đó.</p>
+  </div>
+
+  <footer>
+    Dựng 03/09/2026 · số liệu đọc trực tiếp từ <code>~/.claude.json</code> và <code>~/.google_workspace_mcp/credentials/</code><br>
+    Việc anh Trương Thanh Tùng giao ngày 30/08 — "để Obsidian kết nối với hệ sinh thái Google, một lượt thay vì từng cái" — đã xong ở đây.
+  </footer>
+
+</div>
+</body>
+</html>

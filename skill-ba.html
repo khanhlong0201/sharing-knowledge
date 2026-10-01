@@ -330,6 +330,93 @@
     border-radius: 2px;
   }
 
+  /* ---------- origin ---------- */
+  :root {
+    --o-mine: #0f6b5c;  --o-mine-bg: #dcebe6;
+    --o-team: #6a4fb3;  --o-team-bg: #e9e3f6;
+    --o-comm: #a8511d;  --o-comm-bg: #f4e4d8;
+    --o-built: #4b5560; --o-built-bg: #e3e6e9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --o-mine: #56c4ac;  --o-mine-bg: #14312b;
+      --o-team: #b39cf0;  --o-team-bg: #2a2340;
+      --o-comm: #dc9257;  --o-comm-bg: #3a2616;
+      --o-built: #a9b3bd; --o-built-bg: #252a2f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --o-mine: #56c4ac;  --o-mine-bg: #14312b;
+    --o-team: #b39cf0;  --o-team-bg: #2a2340;
+    --o-comm: #dc9257;  --o-comm-bg: #3a2616;
+    --o-built: #a9b3bd; --o-built-bg: #252a2f;
+  }
+  .o-mine  { --o: var(--o-mine);  --o-bg: var(--o-mine-bg); }
+  .o-team  { --o: var(--o-team);  --o-bg: var(--o-team-bg); }
+  .o-comm  { --o: var(--o-comm);  --o-bg: var(--o-comm-bg); }
+  .o-built { --o: var(--o-built); --o-bg: var(--o-built-bg); }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--o);
+    background: var(--o-bg);
+    border-radius: 2px;
+    padding: 2px 6px;
+    vertical-align: 2px;
+    white-space: nowrap;
+  }
+  .src { margin: 6px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted); word-break: break-word; }
+  .skill[class*="o-"] { box-shadow: inset 3px 0 0 var(--o); }
+  .skill .head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .agent .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+
+  .origins {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-top: 22px;
+  }
+  .origin {
+    background: var(--surface);
+    padding: 16px 16px 14px;
+    border-top: 3px solid var(--o);
+  }
+  .origin b {
+    display: block;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 28px;
+    color: var(--o);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+  .origin h3 { margin: 2px 0 6px; font-size: 15px; font-weight: 600; }
+  .origin p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .origin code { font-family: var(--mono); font-size: 11.5px; background: var(--surface-2); padding: 1px 4px; border-radius: 2px; }
+
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; flex-basis: 100%; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { color: var(--o, var(--accent)); border-color: var(--o, var(--accent)); background: var(--o-bg, var(--accent-soft)); }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chip i { font-style: normal; color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+
   .empty {
     padding: 34px 0;
     font-family: var(--mono);
@@ -371,23 +458,28 @@
   <header class="masthead">
     <p class="eyebrow">Trần Ngọc Khánh Long · Business Analyst · Gtel OTS</p>
     <h1>Bộ đồ nghề BA</h1>
-    <p class="lede">Toàn bộ <b>agent</b> và <b>skill</b> đang gắn vào vault Ideaverse và Claude Code — xếp theo đúng thứ tự chúng được gọi trong vòng đời một feature, từ khơi gợi yêu cầu tới nghiệm thu.</p>
-    <div class="tally">
-      <div><b>20</b><span>Agent</span></div>
-      <div><b>83</b><span>Skill</span></div>
-      <div><b>11</b><span>Agent BA riêng</span></div>
-      <div><b>5</b><span>Giai đoạn</span></div>
-    </div>
+    <p class="lede">Toàn bộ <b>agent</b> và <b>skill</b> đang gắn vào vault Ideaverse và Claude Code. Mỗi món được gắn <b>nguồn gốc</b>: tự custom, team custom, cài từ cộng đồng, hay có sẵn trong Claude.</p>
+    <div class="tally" id="tally"></div>
   </header>
+
+  <section id="origin" style="padding-top:34px">
+    <div class="sechead">
+      <h2>Nguồn gốc — ai viết cái gì</h2>
+      <p>Phân loại theo nơi cài và repo gốc: <code>~/.claude/skills</code>, <code>~/.claude/agents</code>, git remote, plugin, và catalog của hai repo workflow.</p>
+    </div>
+    <div class="origins" id="origins"></div>
+  </section>
 
   <div class="toolbar">
     <input id="q" type="search" placeholder="Lọc theo tên hoặc việc cần làm — vd: mockup, UAT, draw.io" autocomplete="off" aria-label="Lọc agent và skill">
     <span class="hits" id="hits"></span>
     <nav class="jump">
+      <a href="#origin">Nguồn</a>
       <a href="#agents">Agent</a>
       <a href="#skills">Skill</a>
       <a href="#notes">Vận hành</a>
     </nav>
+    <div class="chips" id="chips" role="group" aria-label="Lọc theo nguồn gốc"></div>
   </div>
 
   <section id="agents">
@@ -409,8 +501,8 @@
 
   <section id="skills">
     <div class="sechead">
-      <h2>Skill — 83, chia 10 nhóm</h2>
-      <p>Ô tô đậm là skill chạm tới hằng ngày. Gõ <code>/</code> kèm tên để gọi.</p>
+      <h2 id="skillTitle">Skill</h2>
+      <p>Viền trái và nhãn góc phải cho biết nguồn gốc. Ô tô đậm là skill chạm tới hằng ngày. Gõ <code>/</code> kèm tên để gọi.</p>
     </div>
     <div id="groups"></div>
     <p class="empty" id="empty" hidden>Không khớp gì. Xoá bớt từ khoá.</p>
@@ -438,6 +530,14 @@
         <h4>Ngoài phạm vi BA</h4>
         <p>Không viết Data Model, ERD, API Contract. Kịch bản UAT trace 1-1 với mã <code>AC-xx</code>, ngôn ngữ End-User, không viết unit test.</p>
       </div>
+      <div class="note-card">
+        <h4>Sửa skill tự custom ở repo, không sửa trong ~/.claude</h4>
+        <p>Nguồn thật: <code>D:\github_ai\gtel-ots-ba-workflow-lab\claude-ba\</code>, sync bằng <code>scripts\sync.ps1 -Mode Sync</code>. Riêng <code>me</code> nằm thẳng trong <code>~/.claude/skills/me</code>. Skill cộng đồng giữ nguyên để còn pull bản mới.</p>
+      </div>
+      <div class="note-card warn">
+        <h4>9 skill có trên đĩa nhưng không nạp</h4>
+        <p><code>ask-matt</code> <code>grill-me</code> <code>grill-with-docs</code> <code>handoff</code> <code>teach</code> <code>to-questionnaire</code> <code>to-spec</code> <code>to-tickets</code> <code>wait-what</code> — cùng bộ cài với <code>grilling</code>, nằm trong <code>~/.claude/skills</code> nhưng không có trong danh sách phiên.</p>
+      </div>
       <div class="note-card warn">
         <h4>gstack: nạp 6 / khoảng 45 lệnh</h4>
         <p>Phiên hiện chỉ nạp <code>gstack</code> <code>browse</code> <code>spec</code> <code>investigate</code> <code>office-hours</code> và vài skill dùng chung. Các lệnh còn lại (<code>/ship</code>, <code>/qa</code>, <code>/review</code>, <code>/canary</code>, <code>/retro</code>…) gọi qua router <code>/gstack</code>.</p>
@@ -451,207 +551,250 @@
 
   <footer>
     <span>Vault: Ideaverse Pro Final Long.Tnk</span>
-    <span>Nguồn: ba-profile.md · danh sách skill phiên 2026-09-17</span>
+    <span>Nguồn: ba-profile.md · danh sách skill phiên 2026-10-01 · ~/.claude/skills · installed_plugins.json</span>
   </footer>
 </div>
 
 <script>
+/* ---------- nguồn gốc ---------- */
+var ORIGINS = {
+  mine:  { label: "Tự custom",    title: "Tự custom — Long + Claude viết",
+           desc: "Viết riêng cho nghề BA tại Gtel OTS. Nguồn ở <code>gtel-ots-ba-workflow-lab/claude-ba</code>, riêng <code>me</code> nằm thẳng trong <code>~/.claude/skills</code>." },
+  team:  { label: "Team custom",  title: "Team custom — mượn từ CuongHM",
+           desc: "Build tại workspace của <code>cuonghm-ai-workflow-lab</code> (có spec riêng), sync sang máy này. Không phải bản cộng đồng." },
+  comm:  { label: "Cộng đồng",    title: "Cộng đồng — cài nguyên bản",
+           desc: "Skill/plugin của bên thứ ba, cài verbatim để còn pull update: gstack, superpowers, caveman, taste-skill, Agents365-ai…" },
+  built: { label: "Có sẵn Claude", title: "Có sẵn — Anthropic / Claude Code",
+           desc: "Đi kèm Claude Code hoặc sync từ claude.ai (<code>~/.claude/skills/synced</code>). Không cần cài, không nên sửa." }
+};
+var ORDER = ["mine", "team", "comm", "built"];
+
 const PHASES = [
   {
     num: "GIAI ĐOẠN 01", name: "Khởi động", desc: "Bóc tài liệu thô thành thứ chốt được với stakeholder.",
     agents: [
-      { slug: "ba-elicitation-analyst", own: "Project Brief, Stakeholder RACI, Glossary, Kế hoạch khơi gợi.", meta: "Read · Grep · Glob · Write · WebSearch" }
+      { slug: "ba-elicitation-analyst", o: "mine", own: "Project Brief, Stakeholder RACI, Glossary, Kế hoạch khơi gợi.", meta: "Read · Grep · Glob · Write · WebSearch" }
     ]
   },
   {
     num: "GIAI ĐOẠN 02", name: "Lập kế hoạch", desc: "Từ yêu cầu thành phạm vi và lịch giao hàng.",
     agents: [
-      { slug: "ba-requirement-analyst", own: "Epic &amp; Feature List, Gap Analysis, ưu tiên phạm vi, câu hỏi cần PO chốt.", meta: "Đọc hồ sơ thầu, biên bản họp, tài liệu cũ, mockup" },
-      { slug: "ba-sprint-planner", own: "Release Plan chia sprint, capacity bằng số thật, phương án B, và phần KHÔNG làm.", meta: "Mỗi sprint một outcome demo được" }
+      { slug: "ba-requirement-analyst", o: "mine", own: "Epic &amp; Feature List, Gap Analysis, ưu tiên phạm vi, câu hỏi cần PO chốt.", meta: "Đọc hồ sơ thầu, biên bản họp, tài liệu cũ, mockup" },
+      { slug: "ba-sprint-planner", o: "mine", own: "Release Plan chia sprint, capacity bằng số thật, phương án B, và phần KHÔNG làm.", meta: "Mỗi sprint một outcome demo được" }
     ]
   },
   {
     num: "GIAI ĐOẠN 03", name: "Thực thi", desc: "Viết spec, vẽ luồng, phác giao diện, tách story.",
     agents: [
-      { slug: "ba-feature-spec-writer", own: "Feature Spec 14 mục, BR/FR/AC, Traceability Matrix.", meta: "Chạy check_spec.py trước khi báo xong" },
-      { slug: "ba-process-modeler", own: "Process Flow, State Diagram, ma trận Trạng thái × Hành động.", meta: "Trả .drawio sửa được kèm ảnh xuất" },
-      { slug: "ba-ui-mockup-designer", own: "Mockup HTML một file chạy được, prompt Figma/Visily.", meta: "Dùng lại component của ba-mockup-kit" },
-      { slug: "ba-mockup-reviewer", own: "Soát mockup ↔ spec hai chiều, đủ 4 trạng thái, nút theo quyền.", meta: "Đọc mockup bằng grep · không tự sửa file" },
-      { slug: "ba-user-story-writer", own: "Tách Feature thành User Story Jira, sub-task [BA], thứ tự backlog theo phụ thuộc.", meta: "Không tạo sub-task QC — QC có luồng riêng" }
+      { slug: "ba-feature-spec-writer", o: "mine", own: "Feature Spec 14 mục, BR/FR/AC, Traceability Matrix.", meta: "Chạy check_spec.py trước khi báo xong" },
+      { slug: "ba-process-modeler", o: "mine", own: "Process Flow, State Diagram, ma trận Trạng thái × Hành động.", meta: "Trả .drawio sửa được kèm ảnh xuất" },
+      { slug: "ba-ui-mockup-designer", o: "mine", own: "Mockup HTML một file chạy được, prompt Figma/Visily.", meta: "Dùng lại component của ba-mockup-kit" },
+      { slug: "ba-mockup-reviewer", o: "mine", own: "Soát mockup ↔ spec hai chiều, đủ 4 trạng thái, nút theo quyền.", meta: "Đọc mockup bằng grep · không tự sửa file" },
+      { slug: "ba-user-story-writer", o: "mine", own: "Tách Feature thành User Story Jira, sub-task [BA], thứ tự backlog theo phụ thuộc.", meta: "Không tạo sub-task QC — QC có luồng riêng" }
     ]
   },
   {
     num: "GIAI ĐOẠN 04", name: "Nghiệm thu", desc: "Cổng soát trước publish, rồi kiểm lại sau publish.",
     agents: [
-      { slug: "ba-reviewer", own: "Gate soát tài liệu chữ trước publish — 5 checklist theo loại tài liệu.", meta: "Chỉ liệt kê phát hiện kèm mức độ, không tự sửa" },
-      { slug: "ba-publish-verifier", own: "Kiểm sau publish: đúng space và trang cha, link hai chiều, sub-task [BA] đủ chưa.", meta: "CHỈ ĐỌC — không bao giờ ghi lên Confluence/Jira" },
-      { slug: "ba-uat-planner", own: "UAT Plan, kịch bản kiểm thử chấp nhận, ma trận nghiệm thu và sign-off.", meta: "Mỗi kịch bản trace 1-1 với một mã AC" }
+      { slug: "ba-reviewer", o: "mine", own: "Gate soát tài liệu chữ trước publish — 5 checklist theo loại tài liệu.", meta: "Chỉ liệt kê phát hiện kèm mức độ, không tự sửa" },
+      { slug: "ba-publish-verifier", o: "mine", own: "Kiểm sau publish: đúng space và trang cha, link hai chiều, sub-task [BA] đủ chưa.", meta: "CHỈ ĐỌC — không bao giờ ghi lên Confluence/Jira" },
+      { slug: "ba-uat-planner", o: "mine", own: "UAT Plan, kịch bản kiểm thử chấp nhận, ma trận nghiệm thu và sign-off.", meta: "Mỗi kịch bản trace 1-1 với một mã AC" }
     ]
   },
   {
     num: "GIAI ĐOẠN 05", name: "Vận hành", desc: "Sau golive: đo, đánh giá, phân loại thay đổi.",
     agents: [
-      { slug: "ba-requirement-analyst", own: "Quay lại lần hai: đánh giá sau golive, phân loại Change Request, cập nhật metrics/OKR.", meta: "Luật A sửa nhanh trong sprint · Luật B phải lập tài liệu CR" }
+      { slug: "ba-requirement-analyst", o: "mine", repeat: true, own: "Quay lại lần hai: đánh giá sau golive, phân loại Change Request, cập nhật metrics/OKR.", meta: "Luật A sửa nhanh trong sprint · Luật B phải lập tài liệu CR" }
     ]
   }
 ];
 
 const SUPPORT = {
   title: "Đội phụ trợ — 9 agent không thuộc luồng BA",
-  desc: "Gọi khi cần tìm code, sửa nhỏ, soát diff, hoặc quét rộng nhiều file.",
+  desc: "Không cái nào do mình viết: 3 agent cavecrew đến từ plugin caveman, 6 cái còn lại có sẵn trong Claude Code.",
   agents: [
-    { slug: "cavecrew-investigator", own: "Định vị code chỉ-đọc, trả bảng file:line. Từ chối đề xuất fix.", meta: "Output nén, main context đỡ tốn ~60%" },
-    { slug: "cavecrew-builder", own: "Sửa gọn 1–2 file: typo, đổi tên máy móc, viết lại một hàm.", meta: "Từ chối cứng khi phạm vi ≥3 file" },
-    { slug: "cavecrew-reviewer", own: "Soát diff/branch/file, mỗi phát hiện một dòng có gắn mức độ.", meta: "Không khen, không mở rộng phạm vi" },
-    { slug: "Explore", own: "Quét rộng nhiều thư mục và quy ước đặt tên, chỉ trả kết luận.", meta: "Read-only · chỉ định độ rộng medium hay very thorough" },
-    { slug: "Plan", own: "Dựng kế hoạch triển khai từng bước, chỉ ra file trọng yếu.", meta: "Read-only" },
-    { slug: "general-purpose", own: "Việc nhiều bước, tìm kiếm khi chưa chắc khớp ngay lần đầu.", meta: "Toàn quyền tool" },
-    { slug: "claude", own: "Catch-all cho việc không khớp agent chuyên biệt nào.", meta: "Mặc định của FleetView" },
-    { slug: "claude-code-guide", own: "Trả lời về Claude Code, Agent SDK, Claude API, plugin eval.", meta: "Hỏi trước khi spawn cái mới — tái dùng agent đang chạy" },
-    { slug: "statusline-setup", own: "Cấu hình status line của Claude Code.", meta: "Read · Edit" }
+    { slug: "cavecrew-investigator", o: "comm", src: "plugin caveman", own: "Định vị code chỉ-đọc, trả bảng file:line. Từ chối đề xuất fix." },
+    { slug: "cavecrew-builder", o: "comm", src: "plugin caveman", own: "Sửa gọn 1–2 file: typo, đổi tên máy móc, viết lại một hàm." },
+    { slug: "cavecrew-reviewer", o: "comm", src: "plugin caveman", own: "Soát diff/branch/file, mỗi phát hiện một dòng có gắn mức độ." },
+    { slug: "Explore", o: "built", src: "Claude Code", own: "Quét rộng nhiều thư mục và quy ước đặt tên, chỉ trả kết luận." },
+    { slug: "Plan", o: "built", src: "Claude Code", own: "Dựng kế hoạch triển khai từng bước, chỉ ra file trọng yếu." },
+    { slug: "general-purpose", o: "built", src: "Claude Code", own: "Việc nhiều bước, tìm kiếm khi chưa chắc khớp ngay lần đầu." },
+    { slug: "claude", o: "built", src: "Claude Code", own: "Catch-all cho việc không khớp agent chuyên biệt nào." },
+    { slug: "claude-code-guide", o: "built", src: "Claude Code", own: "Trả lời về Claude Code, Agent SDK, Claude API, plugin eval." },
+    { slug: "statusline-setup", o: "built", src: "Claude Code", own: "Cấu hình status line của Claude Code." }
   ]
 };
 
+/* item: [slug, mô tả, nguồn, chi tiết nguồn] */
 const GROUPS = [
   {
-    name: "BA delivery", note: "Lõi nghề — sáu skill này bám đúng 5 giai đoạn ở trên.", star: true,
+    name: "BA delivery", note: "Lõi nghề — cả 6 đều tự custom, bám đúng 5 giai đoạn ở trên.", star: true,
     items: [
-      ["ba-feature-spec", "Viết &amp; soát Feature Spec 14 mục, 10 bước, sinh AC từ Data Elements, chạy check_spec.py"],
-      ["ba-jira-confluence-sync", "Đẩy Confluence MAP26, tạo User Story Jira, sub-task [BA], log work, chia timesheet"],
-      ["ba-change-request", "Tiếp nhận CR, phân loại Luật A/B, Impact Analysis 6 chiều, truy vết ngược spec"],
-      ["ba-uat", "Bóc AC thành UAT Test Script, lập UAT Plan và tiêu chí Sign-off"],
-      ["ba-mockup-kit", "Component Enterprise Admin: data table, filter bar, form modal CRUD, badge, drawer, empty/loading state"],
-      ["ba-day", "Mở ngày / chốt ngày — nối 4 luồng vào một Daily note duy nhất"]
+      ["ba-feature-spec", "Viết &amp; soát Feature Spec 14 mục, 10 bước, sinh AC từ Data Elements, chạy check_spec.py", "mine", "claude-ba/skills"],
+      ["ba-jira-confluence-sync", "Đẩy Confluence MAP26, tạo User Story Jira, sub-task [BA], log work, chia timesheet", "mine", "claude-ba/skills"],
+      ["ba-change-request", "Tiếp nhận CR, phân loại Luật A/B, Impact Analysis 6 chiều, truy vết ngược spec", "mine", "claude-ba/skills"],
+      ["ba-uat", "Bóc AC thành UAT Test Script, lập UAT Plan và tiêu chí Sign-off", "mine", "claude-ba/skills"],
+      ["ba-mockup-kit", "Component Enterprise Admin: data table, filter bar, form modal CRUD, badge, drawer, empty/loading state", "mine", "claude-ba/skills"],
+      ["ba-day", "Mở ngày / chốt ngày — nối 4 luồng vào một Daily note duy nhất", "mine", "claude-ba/skills"]
     ]
   },
   {
     name: "Vault &amp; cá nhân", note: "Giữ second brain sạch và nạp context về chính mình.",
     items: [
-      ["me", "Hồ sơ bản thân trong vault, nạp context theo tầng, lấp field trống bằng phỏng vấn 3 câu"],
-      ["graphify", "Biến mọi input thành knowledge graph có god node, community detection, query/path/explain"],
-      ["obsidian-organizer", "Xếp note mới vào đúng thư mục, audit và dọn cấu trúc vault"],
-      ["task-manager", "Bắt task viết tay tiếng Việt, tự phân loại deadline/ưu tiên, xem bằng mindmap"]
+      ["me", "Hồ sơ bản thân trong vault, nạp context theo tầng, lấp field trống bằng phỏng vấn 3 câu", "mine", "~/.claude/skills/me"],
+      ["graphify", "Biến mọi input thành knowledge graph có god node, community detection, query/path/explain", "comm", "graphify upstream"],
+      ["obsidian-organizer", "Xếp note mới vào đúng thư mục, audit và dọn cấu trúc vault", "comm", "~/.agents/skills (symlink)"],
+      ["task-manager", "Bắt task viết tay tiếng Việt, tự phân loại deadline/ưu tiên, xem bằng mindmap", "team", "CuongHM — mô tả vẫn ghi \"for CuongHM\""]
     ]
   },
   {
     name: "Sơ đồ &amp; tài liệu", note: "Đầu ra đi kèm Feature Spec và tài liệu phát hành.",
     items: [
-      ["drawio-skill-v2", "Bản dùng chính: sinh .drawio và xuất PNG/SVG/PDF qua draw.io CLI"],
-      ["drawio-skill", "Bản đầy hơn: thêm BPMN, SysML/MBSE, swimlane cross-functional"],
-      ["diagram", "Mô tả bằng lời thành bộ ba: source, .excalidraw sửa được, ảnh"],
-      ["mermaid-validator", "Render offline mọi block mermaid trong .md để bắt lỗi cú pháp trước khi giao"],
-      ["make-pdf", "Markdown thành PDF chất lượng in"],
-      ["document-generate", "Sinh tài liệu còn thiếu cho một feature, module hoặc cả dự án"],
-      ["confluence-sync", "Đẩy docs repo lên Confluence Data Center theo manifest, một chiều, có dry-run"],
-      ["research", "Điều tra câu hỏi theo nguồn gốc rồi lưu kết quả thành Markdown trong repo"],
-      ["paper-fetch", "Tải PDF paper từ DOI, arXiv id, tiêu đề hoặc trích dẫn"],
-      ["semanticscholar-skill", "Tra paper, citation, tác giả, gợi ý đọc tiếp"]
+      ["drawio-skill-v2", "Bản dùng chính: sinh .drawio và xuất PNG/SVG/PDF qua draw.io CLI", "comm", "Agents365-ai/drawio-skill, qua repo CuongHM"],
+      ["drawio-skill", "Bản đầy hơn: thêm BPMN, SysML/MBSE, swimlane cross-functional", "comm", "Agents365-ai, ~/.agents/skills"],
+      ["diagram", "Mô tả bằng lời thành bộ ba: source, .excalidraw sửa được, ảnh", "comm", "gstack"],
+      ["mermaid-validator", "Render offline mọi block mermaid trong .md để bắt lỗi cú pháp trước khi giao", "team", "CuongHM — build tại workspace"],
+      ["make-pdf", "Markdown thành PDF chất lượng in", "comm", "gstack"],
+      ["document-generate", "Sinh tài liệu còn thiếu cho một feature, module hoặc cả dự án", "comm", "gstack"],
+      ["confluence-sync", "Đẩy docs repo lên Confluence Data Center theo manifest, một chiều, có dry-run", "team", "CuongHM — build tại workspace"],
+      ["research", "Điều tra câu hỏi theo nguồn gốc rồi lưu kết quả thành Markdown trong repo", "comm", "bộ Matt Pocock (cùng ask-matt)"],
+      ["paper-fetch", "Tải PDF paper từ DOI, arXiv id, tiêu đề hoặc trích dẫn", "comm", "Agents365-ai, ~/.agents/skills"],
+      ["semanticscholar-skill", "Tra paper, citation, tác giả, gợi ý đọc tiếp", "comm", "~/.agents/skills (symlink)"]
     ]
   },
   {
-    name: "UI &amp; thiết kế", note: "Chỗ tốn thời gian nhất trong quy trình — phác giao diện.",
+    name: "UI &amp; thiết kế", note: "Chỗ tốn thời gian nhất trong quy trình — phác giao diện. Toàn bộ là bản cộng đồng.",
     items: [
-      ["ui-ux-pro-max", "DB tra cứu: 67 style, 161 palette, 57 cặp font, 25 loại chart, 21 stack"],
-      ["ui-styling", "shadcn/ui trên Radix + Tailwind, dark mode, component accessible"],
-      ["design", "Gói tổng: logo, CIP 50 deliverable, slide, banner, icon, ảnh social"],
-      ["design-system", "Token ba tầng primitive → semantic → component, thang spacing và typography"],
-      ["brand", "Giọng brand, messaging framework, quản lý asset, style guide"],
-      ["brandkit", "Board brand guideline, logo system, identity deck cao cấp"],
-      ["banner-design", "Banner social/ads/web/print, 22 style, nhiều hướng art direction"],
-      ["slides", "Slide HTML chiến lược kèm Chart.js và design token"],
-      ["frontend-slides", "Presentation HTML giàu animation, convert được từ PPTX"],
-      ["minimalist-skill", "Giao diện editorial, đơn sắc ấm, bento phẳng — cấm gradient và shadow nặng"],
-      ["soft-skill", "Font, spacing, shadow, animation kiểu agency cao cấp; chặn default nhìn rẻ tiền"],
-      ["taste-skill", "Landing page / portfolio chống rập khuôn, audit trước khi redesign"],
-      ["static-site-deploy", "Đẩy một bundle static lên Vercel để lấy URL chia sẻ nhanh"]
+      ["ui-ux-pro-max", "DB tra cứu: 67 style, 161 palette, 57 cặp font, 25 loại chart, 21 stack", "comm", "upstream, qua repo CuongHM"],
+      ["ui-styling", "shadcn/ui trên Radix + Tailwind, dark mode, component accessible", "comm", "bộ design upstream, qua repo CuongHM"],
+      ["design", "Gói tổng: logo, CIP 50 deliverable, slide, banner, icon, ảnh social", "comm", "bộ design upstream, qua repo CuongHM"],
+      ["design-system", "Token ba tầng primitive → semantic → component, thang spacing và typography", "comm", "bộ design upstream, qua repo CuongHM"],
+      ["brand", "Giọng brand, messaging framework, quản lý asset, style guide", "comm", "bộ design upstream, qua repo CuongHM"],
+      ["brandkit", "Board brand guideline, logo system, identity deck cao cấp", "comm", "bộ taste-skill"],
+      ["banner-design", "Banner social/ads/web/print, 22 style, nhiều hướng art direction", "comm", "bộ design upstream, qua repo CuongHM"],
+      ["slides", "Slide HTML chiến lược kèm Chart.js và design token", "comm", "bộ design upstream, qua repo CuongHM"],
+      ["frontend-slides", "Presentation HTML giàu animation, convert được từ PPTX", "comm", "zarazhangrui/frontend-slides"],
+      ["minimalist-skill", "Giao diện editorial, đơn sắc ấm, bento phẳng — cấm gradient và shadow nặng", "comm", "bộ taste-skill"],
+      ["soft-skill", "Font, spacing, shadow, animation kiểu agency cao cấp; chặn default nhìn rẻ tiền", "comm", "bộ taste-skill"],
+      ["taste-skill", "Landing page / portfolio chống rập khuôn, audit trước khi redesign", "comm", "bộ taste-skill"],
+      ["static-site-deploy", "Đẩy một bundle static lên Vercel để lấy URL chia sẻ nhanh", "team", "CuongHM — build tại workspace"]
     ]
   },
   {
-    name: "gstack", note: "Bộ của Garry Tan. Phiên này nạp 6 — phần còn lại gọi qua router.",
+    name: "gstack", note: "Bộ của Garry Tan, cài bằng git clone. Phiên này nạp 5 — phần còn lại gọi qua router.",
     items: [
-      ["gstack", "Router cho toàn bộ bộ skill gstack"],
-      ["browse", "Headless browser để QA và dogfood site — dùng thay cho tool Chrome MCP"],
-      ["spec", "Ý mơ hồ thành spec thực thi được, chia 5 pha"],
-      ["investigate", "Debug có hệ thống, truy tới root cause"],
-      ["office-hours", "YC Office Hours, hai chế độ"]
+      ["gstack", "Router cho toàn bộ bộ skill gstack", "comm", "github.com/garrytan/gstack"],
+      ["browse", "Headless browser để QA và dogfood site — dùng thay cho tool Chrome MCP", "comm", "gstack"],
+      ["spec", "Ý mơ hồ thành spec thực thi được, chia 5 pha", "comm", "gstack"],
+      ["investigate", "Debug có hệ thống, truy tới root cause", "comm", "gstack"],
+      ["office-hours", "YC Office Hours, hai chế độ", "comm", "gstack"]
     ]
   },
   {
     name: "Quy trình làm việc", note: "Nạp trước khi bắt tay vào việc sáng tạo hoặc việc nhiều bước.",
     items: [
-      ["brainstorming", "Bắt buộc nạp trước mọi việc sáng tạo — đào intent và yêu cầu trước khi làm"],
-      ["writing-plans", "Có spec rồi thì dựng kế hoạch nhiều bước trước khi chạm code"],
-      ["writing-skills", "Tạo, sửa, kiểm chứng skill trước khi triển khai"],
-      ["writing-for-agents", "Viết tài liệu cho agent đọc: skill, AGENTS.md, CLAUDE.md"],
-      ["using-superpowers", "Cách tìm và gọi skill trước khi trả lời bất cứ gì"],
-      ["grilling", "Truy vấn gắt một kế hoạch hoặc quyết định để stress-test lập luận"],
-      ["systematic-debugging", "Gặp bug hay test fail thì nạp trước khi đề xuất cách sửa"],
-      ["diagnosing-bugs", "Vòng chẩn đoán cho bug khó và regression hiệu năng"],
-      ["output-skill", "Chặn thói cắt ngắn: cấm placeholder, ép sinh code đầy đủ"],
-      ["stop-slop", "Gỡ dấu hiệu văn AI khỏi bản thảo"],
-      ["prompt-master", "Viết và tinh prompt cho từng công cụ AI cụ thể"]
+      ["brainstorming", "Bắt buộc nạp trước mọi việc sáng tạo — đào intent và yêu cầu trước khi làm", "comm", "bộ superpowers"],
+      ["writing-plans", "Có spec rồi thì dựng kế hoạch nhiều bước trước khi chạm code", "comm", "bộ superpowers"],
+      ["writing-skills", "Tạo, sửa, kiểm chứng skill trước khi triển khai", "comm", "bộ superpowers"],
+      ["using-superpowers", "Cách tìm và gọi skill trước khi trả lời bất cứ gì", "comm", "bộ superpowers"],
+      ["systematic-debugging", "Gặp bug hay test fail thì nạp trước khi đề xuất cách sửa", "comm", "bộ superpowers"],
+      ["writing-for-agents", "Viết tài liệu cho agent đọc: skill, AGENTS.md, CLAUDE.md", "comm", "bộ Matt Pocock (cùng ask-matt)"],
+      ["grilling", "Truy vấn gắt một kế hoạch hoặc quyết định để stress-test lập luận", "comm", "bộ Matt Pocock (cùng ask-matt)"],
+      ["diagnosing-bugs", "Vòng chẩn đoán cho bug khó và regression hiệu năng", "comm", "bộ Matt Pocock (cùng ask-matt)"],
+      ["output-skill", "Chặn thói cắt ngắn: cấm placeholder, ép sinh code đầy đủ", "comm", "bộ taste-skill"],
+      ["stop-slop", "Gỡ dấu hiệu văn AI khỏi bản thảo", "comm", "~/.agents/skills"],
+      ["prompt-master", "Viết và tinh prompt cho từng công cụ AI cụ thể", "comm", "~/.agents/skills"]
     ]
   },
   {
-    name: "Caveman", note: "Chế độ nén output đang bật (mức full).",
+    name: "Caveman", note: "Plugin cộng đồng — chế độ nén output đang bật (mức full).",
     items: [
-      ["caveman", "Đổi mức nén: lite / full / ultra / wenyan"],
-      ["caveman-commit", "Sinh commit message kiểu nén"],
-      ["caveman-review", "Comment review một dòng mỗi lỗi"],
-      ["caveman-stats", "Token thật đã dùng, tiết kiệm trọn đời, quy ra USD"],
-      ["caveman-init", "Cắm luật caveman always-on vào repo hiện tại"],
-      ["caveman-help", "Thẻ tra cứu nhanh mọi chế độ và lệnh"],
-      ["caveman-compress", "Nén file memory (CLAUDE.md, todo) giữ nguyên phần kỹ thuật, lưu bản gốc .original.md"],
-      ["cavecrew", "Hướng dẫn khi nào nên đẩy việc cho investigator / builder / reviewer"]
+      ["caveman", "Đổi mức nén: lite / full / ultra / wenyan", "comm", "plugin caveman"],
+      ["caveman-commit", "Sinh commit message kiểu nén", "comm", "plugin caveman"],
+      ["caveman-review", "Comment review một dòng mỗi lỗi", "comm", "plugin caveman"],
+      ["caveman-stats", "Token thật đã dùng, tiết kiệm trọn đời, quy ra USD", "comm", "plugin caveman"],
+      ["caveman-init", "Cắm luật caveman always-on vào repo hiện tại", "comm", "plugin caveman"],
+      ["caveman-help", "Thẻ tra cứu nhanh mọi chế độ và lệnh", "comm", "plugin caveman"],
+      ["caveman-compress", "Nén file memory (CLAUDE.md, todo) giữ nguyên phần kỹ thuật, lưu bản gốc .original.md", "comm", "plugin caveman"],
+      ["cavecrew", "Hướng dẫn khi nào nên đẩy việc cho investigator / builder / reviewer", "comm", "plugin caveman"]
     ]
   },
   {
-    name: "Claude Code — hệ thống", note: "Điều khiển chính cái harness đang chạy.",
+    name: "Claude Code — hệ thống", note: "Có sẵn trong harness đang chạy, không cần cài.",
     items: [
-      ["code-review", "Soát diff hoặc PR tìm lỗi đúng-sai, chọn được mức nỗ lực low → max"],
-      ["simplify", "Dọn code đã đổi cho gọn và dùng lại được — không săn bug"],
-      ["security-review", "Soát bảo mật phần thay đổi trên nhánh hiện tại"],
-      ["run", "Chạy app của dự án để thấy thay đổi hoạt động thật"],
-      ["init", "Sinh file CLAUDE.md mới mô tả codebase"],
-      ["loop", "Chạy lặp một prompt hoặc slash command theo chu kỳ"],
-      ["schedule", "Tạo và quản lý cloud agent chạy theo cron"],
-      ["update-config", "Sửa settings.json: hook, permission, biến môi trường"],
-      ["keybindings-help", "Tuỳ biến phím tắt trong ~/.claude/keybindings.json"],
-      ["fewer-permission-prompts", "Quét transcript rồi đề xuất allowlist để bớt hỏi quyền"],
-      ["claude-api", "Tra model id, giá, tham số, streaming, tool use, caching"],
-      ["workflow-authoring", "Viết script cho tool Workflow: API, gotcha, resume"],
-      ["claude-in-chrome", "Tự động hoá Chrome — nhưng gstack bắt dùng /browse thay thế"],
-      ["dataviz", "Nạp trước khi viết dòng code chart đầu tiên: bảng màu, mark spec, luật tương tác"],
-      ["artifact-design", "Hợp đồng trang và nền tảng thiết kế cho Artifact"],
-      ["artifact-diagramming", "Khi nào sơ đồ đáng vẽ và cách vẽ SVG inline đọc được ở cả hai theme"],
-      ["artifact-capabilities", "Cấp quyền runtime cho trang: đọc dữ liệu sống, giữ state chung, hỏi ngược Claude"]
+      ["code-review", "Soát diff hoặc PR tìm lỗi đúng-sai, chọn được mức nỗ lực low → max", "built", "Claude Code"],
+      ["simplify", "Dọn code đã đổi cho gọn và dùng lại được — không săn bug", "built", "Claude Code"],
+      ["security-review", "Soát bảo mật phần thay đổi trên nhánh hiện tại", "built", "Claude Code"],
+      ["run", "Chạy app của dự án để thấy thay đổi hoạt động thật", "built", "Claude Code"],
+      ["init", "Sinh file CLAUDE.md mới mô tả codebase", "built", "Claude Code"],
+      ["loop", "Chạy lặp một prompt hoặc slash command theo chu kỳ", "built", "Claude Code"],
+      ["schedule", "Tạo và quản lý cloud agent chạy theo cron", "built", "Claude Code"],
+      ["update-config", "Sửa settings.json: hook, permission, biến môi trường", "built", "Claude Code"],
+      ["keybindings-help", "Tuỳ biến phím tắt trong ~/.claude/keybindings.json", "built", "Claude Code"],
+      ["fewer-permission-prompts", "Quét transcript rồi đề xuất allowlist để bớt hỏi quyền", "built", "Claude Code"],
+      ["claude-api", "Tra model id, giá, tham số, streaming, tool use, caching", "built", "Claude Code"],
+      ["workflow-authoring", "Viết script cho tool Workflow: API, gotcha, resume", "built", "Claude Code"],
+      ["claude-in-chrome", "Tự động hoá Chrome — nhưng gstack bắt dùng /browse thay thế", "built", "Claude Code"],
+      ["dataviz", "Nạp trước khi viết dòng code chart đầu tiên: bảng màu, mark spec, luật tương tác", "built", "Claude Code"],
+      ["artifact-design", "Hợp đồng trang và nền tảng thiết kế cho Artifact", "built", "Claude Code"],
+      ["artifact-diagramming", "Khi nào sơ đồ đáng vẽ và cách vẽ SVG inline đọc được ở cả hai theme", "built", "Claude Code"],
+      ["artifact-capabilities", "Cấp quyền runtime cho trang: đọc dữ liệu sống, giữ state chung, hỏi ngược Claude", "built", "Claude Code"]
     ]
   },
   {
-    name: "Office &amp; file", note: "Đầu ra gửi ra ngoài đội.",
+    name: "Office &amp; file", note: "Bộ anthropic-skills, sync từ claude.ai vào ~/.claude/skills/synced.",
     items: [
-      ["docs", "Tài liệu sống trên claude.ai để người khác comment và cùng sửa"],
-      ["docx", "Word: tạo, đọc, sửa .docx/.dotx, tracked change, comment, template"],
-      ["pptx", "PowerPoint: tạo, bóc text, sửa, ghép tách, layout và speaker note"],
-      ["xlsx", "Excel/CSV: đọc, sửa, công thức, chart, dọn dữ liệu bẩn"],
-      ["pdf", "PDF: đọc, ghép, tách, xoay, watermark, điền form, OCR"],
-      ["skill-creator", "Tạo skill mới, tối ưu skill cũ, chạy eval đo hiệu quả"],
-      ["import-memory", "Nhập bản export memory từ trợ lý AI khác"],
-      ["morning", "Bản tin sáng dạng artifact HTML, dựng được thành task lặp mỗi ngày làm việc"]
+      ["docs", "Tài liệu sống trên claude.ai để người khác comment và cùng sửa", "built", "anthropic-skills"],
+      ["docx", "Word: tạo, đọc, sửa .docx/.dotx, tracked change, comment, template", "built", "anthropic-skills"],
+      ["pptx", "PowerPoint: tạo, bóc text, sửa, ghép tách, layout và speaker note", "built", "anthropic-skills"],
+      ["xlsx", "Excel/CSV: đọc, sửa, công thức, chart, dọn dữ liệu bẩn", "built", "anthropic-skills"],
+      ["pdf", "PDF: đọc, ghép, tách, xoay, watermark, điền form, OCR", "built", "anthropic-skills"],
+      ["google-workspace", "Tạo và sửa Google Docs, Sheets, Slides trong Drive", "built", "anthropic-skills"],
+      ["skill-creator", "Tạo skill mới, tối ưu skill cũ, chạy eval đo hiệu quả", "built", "anthropic-skills"],
+      ["import-memory", "Nhập bản export memory từ trợ lý AI khác", "built", "anthropic-skills"],
+      ["morning", "Bản tin sáng dạng artifact HTML, dựng được thành task lặp mỗi ngày làm việc", "built", "anthropic-skills"]
     ]
   },
   {
     name: "Khác", note: "",
     items: [
-      ["last30days", "Quét Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub và web 30 ngày gần nhất về một chủ đề"]
+      ["last30days", "Quét Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub và web 30 ngày gần nhất về một chủ đề", "comm", "plugin last30days-skill"]
     ]
   }
 ];
 
+/* ---------- đếm ---------- */
+function blank() { return { mine: 0, team: 0, comm: 0, built: 0 }; }
+var skillCount = blank(), agentCount = blank();
+GROUPS.forEach(function (g) { g.items.forEach(function (it) { skillCount[it[2]]++; }); });
+PHASES.forEach(function (p) { p.agents.forEach(function (a) { if (!a.repeat) agentCount[a.o]++; }); });
+SUPPORT.agents.forEach(function (a) { agentCount[a.o]++; });
+function sum(c) { return c.mine + c.team + c.comm + c.built; }
+var totalSkills = sum(skillCount), totalAgents = sum(agentCount);
+
+document.getElementById('tally').innerHTML =
+  '<div><b>' + totalAgents + '</b><span>Agent</span></div>' +
+  '<div><b>' + totalSkills + '</b><span>Skill</span></div>' +
+  '<div><b>' + (agentCount.mine + skillCount.mine) + '</b><span>Tự custom</span></div>' +
+  '<div><b>' + (agentCount.built + skillCount.built + agentCount.comm + skillCount.comm + skillCount.team) + '</b><span>Có sẵn / cài thêm</span></div>';
+
+document.getElementById('skillTitle').textContent = 'Skill — ' + totalSkills + ', chia ' + GROUPS.length + ' nhóm';
+
+document.getElementById('origins').innerHTML = ORDER.map(function (k) {
+  var o = ORIGINS[k];
+  return '<div class="origin o-' + k + '"><b>' + (skillCount[k] + agentCount[k]) + '</b>' +
+    '<h3>' + o.title + '</h3>' +
+    '<p>' + skillCount[k] + ' skill · ' + agentCount[k] + ' agent</p>' +
+    '<p style="margin-top:6px">' + o.desc + '</p></div>';
+}).join('');
+
 /* ---------- render ---------- */
+function badge(k) { return '<span class="badge o-' + k + '">' + ORIGINS[k].label + '</span>'; }
+function text(parts) { return parts.join(' ').toLowerCase().replace(/"/g, '').replace(/&amp;/g, '&'); }
+
 function agentBlock(a) {
-  return '<div class="agent" data-row data-text="' + (a.slug + ' ' + a.own + ' ' + a.meta).toLowerCase().replace(/"/g, '') + '">' +
-    '<div class="slug">' + a.slug + '</div>' +
+  return '<div class="agent" data-row' + (a.repeat ? ' data-repeat' : '') + ' data-o="' + a.o + '" data-text="' + text([a.slug, a.own, a.meta, ORIGINS[a.o].label]) + '">' +
+    '<div class="head"><span class="slug">' + a.slug + '</span>' + badge(a.o) + '</div>' +
     '<p class="own">' + a.own + '</p>' +
     '<p class="meta">' + a.meta + '</p></div>';
 }
@@ -662,28 +805,46 @@ document.getElementById('phases').innerHTML = PHASES.map(function (p) {
     '<div>' + p.agents.map(agentBlock).join('') + '</div></div>';
 }).join('');
 
+function cell(slug, desc, k, src, extra) {
+  return '<div class="skill o-' + k + (extra || '') + '" data-row data-o="' + k + '" data-text="' + text([slug, desc, src, ORIGINS[k].label]) + '">' +
+    '<div class="head"><span class="slug">' + slug + '</span>' + badge(k) + '</div>' +
+    '<p>' + desc + '</p>' +
+    (src ? '<p class="src">↳ ' + src + '</p>' : '') + '</div>';
+}
+
 document.getElementById('support').innerHTML =
   '<div class="group" data-block><h3>' + SUPPORT.title + '</h3><p class="note">' + SUPPORT.desc + '</p>' +
   '<div class="grid">' + SUPPORT.agents.map(function (a) {
-    return '<div class="skill plain" data-row data-text="' + (a.slug + ' ' + a.own + ' ' + a.meta).toLowerCase().replace(/"/g, '') + '">' +
-      '<div class="slug">' + a.slug + '</div><p>' + a.own + '</p></div>';
+    return cell(a.slug, a.own, a.o, a.src, ' plain');
   }).join('') + '</div></div>';
 
 document.getElementById('groups').innerHTML = GROUPS.map(function (g) {
-  var cells = g.items.map(function (it) {
-    return '<div class="skill' + (g.star ? ' star' : '') + '" data-row data-text="' +
-      (it[0] + ' ' + it[1]).toLowerCase().replace(/"/g, '').replace(/&amp;/g, '&') + '">' +
-      '<div class="slug">' + it[0] + '</div><p>' + it[1] + '</p></div>';
-  }).join('');
+  var cells = g.items.map(function (it) { return cell(it[0], it[1], it[2], it[3], g.star ? ' star' : ''); }).join('');
   return '<div class="group" data-block><h3>' + g.name + ' <em>' + g.items.length + '</em></h3>' +
     (g.note ? '<p class="note">' + g.note + '</p>' : '') +
     '<div class="grid">' + cells + '</div></div>';
 }).join('');
 
+/* ---------- chip lọc nguồn ---------- */
+var active = 'all';
+var chipsEl = document.getElementById('chips');
+chipsEl.innerHTML = '<button type="button" class="chip" data-k="all" aria-pressed="true">Tất cả<i>' + (totalSkills + totalAgents) + '</i></button>' +
+  ORDER.map(function (k) {
+    return '<button type="button" class="chip o-' + k + '" data-k="' + k + '" aria-pressed="false">' + ORIGINS[k].label + '<i>' + (skillCount[k] + agentCount[k]) + '</i></button>';
+  }).join('');
+chipsEl.addEventListener('click', function (e) {
+  var b = e.target.closest('.chip');
+  if (!b) return;
+  active = b.getAttribute('data-k');
+  Array.prototype.forEach.call(chipsEl.children, function (c) { c.setAttribute('aria-pressed', String(c === b)); });
+  apply();
+});
+
 /* ---------- filter ---------- */
 var rows = Array.prototype.slice.call(document.querySelectorAll('[data-row]'));
 var blocks = Array.prototype.slice.call(document.querySelectorAll('[data-block]'));
 var hits = document.getElementById('hits');
+var uniq = rows.filter(function (r) { return !r.hasAttribute('data-repeat'); }).length;
 var empty = document.getElementById('empty');
 var q = document.getElementById('q');
 
@@ -691,15 +852,15 @@ function apply() {
   var term = q.value.trim().toLowerCase();
   var shown = 0;
   rows.forEach(function (r) {
-    var ok = !term || r.getAttribute('data-text').indexOf(term) !== -1;
+    var ok = (!term || r.getAttribute('data-text').indexOf(term) !== -1) &&
+             (active === 'all' || r.getAttribute('data-o') === active);
     r.hidden = !ok;
-    if (ok) shown++;
+    if (ok && !r.hasAttribute('data-repeat')) shown++;
   });
   blocks.forEach(function (b) {
-    var any = b.querySelector('[data-row]:not([hidden])');
-    b.hidden = !any;
+    b.hidden = !b.querySelector('[data-row]:not([hidden])');
   });
-  hits.textContent = term ? shown + ' / ' + rows.length + ' khớp' : rows.length + ' mục';
+  hits.textContent = (term || active !== 'all') ? shown + ' / ' + uniq + ' khớp' : uniq + ' mục';
   empty.hidden = shown !== 0;
 }
 q.addEventListener('input', apply);

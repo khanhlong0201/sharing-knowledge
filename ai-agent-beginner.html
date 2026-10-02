@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Agent cho Beginner</title>
+<meta name="description" content="Tổng hợp kiến thức AI Agent cho người mới: LLM, prompt, tool, workflow vs agent, agent loop, multi-agent, framework, xử lý sự cố.">
+<style>
+  :root {
+    --ground:#FBF9F3; --surface:#FFFFFF; --surface-2:#FFFDF7;
+    --ink:#201C15; --ink-soft:#6B6455; --line:#E7E1D4;
+    --yellow:#FFD24A; --yellow-deep:#B98500; --yellow-soft:#FFF0C2;
+    --purple:#6D4AFF; --purple-soft:#ECE7FF; --purple-ink:#3E2BA8;
+    --node-border:#201C15; --shadow:rgba(32,28,21,.9);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#141219; --surface:#1E1B26; --surface-2:#232030;
+      --ink:#F3EFE6; --ink-soft:#A79F90; --line:#322E3D;
+      --yellow:#FFD24A; --yellow-deep:#F0C23A; --yellow-soft:#39321C;
+      --purple:#A48BFF; --purple-soft:#2A2340; --purple-ink:#CDBEFF;
+      --node-border:#0C0B10; --shadow:rgba(0,0,0,.75);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#141219; --surface:#1E1B26; --surface-2:#232030;
+    --ink:#F3EFE6; --ink-soft:#A79F90; --line:#322E3D;
+    --yellow:#FFD24A; --yellow-deep:#F0C23A; --yellow-soft:#39321C;
+    --purple:#A48BFF; --purple-soft:#2A2340; --purple-ink:#CDBEFF;
+    --node-border:#0C0B10; --shadow:rgba(0,0,0,.75);
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:980px; margin:0 auto; padding:0 16px 80px; }
+  header { padding:56px 0 24px; text-align:center; }
+  .eyebrow {
+    font-family:ui-monospace,"Cascadia Code",Consolas,monospace; font-size:.8rem;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--yellow-deep); font-weight:700; margin:0 0 12px;
+  }
+  h1 { font-size:clamp(2rem,5vw,3.2rem); font-weight:800; letter-spacing:-.02em; margin:0 0 10px; line-height:1.1; }
+  h1 .hl { position:relative; display:inline-block; z-index:0; }
+  h1 .hl::after {
+    content:""; position:absolute; left:-4px; right:-4px; bottom:.08em; height:.42em;
+    background:var(--yellow); z-index:-1; border-radius:3px; transform:rotate(-1deg);
+  }
+  .sub { max-width:60ch; margin:0 auto; color:var(--ink-soft); font-size:1.1rem; }
+  nav.toc {
+    display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:28px 0 8px;
+  }
+  nav.toc a {
+    font-size:.85rem; text-decoration:none; color:var(--ink); background:var(--surface);
+    border:1.5px solid var(--line); border-radius:999px; padding:5px 12px;
+  }
+  nav.toc a:hover { border-color:var(--purple); color:var(--purple-ink); }
+  section {
+    background:var(--surface); border:2px solid var(--node-border); border-radius:16px;
+    box-shadow:4px 4px 0 var(--shadow); padding:24px 22px; margin:28px 0;
+  }
+  section h2 { margin:0 0 14px; font-size:1.4rem; display:flex; gap:10px; align-items:center; }
+  .num {
+    flex:none; width:34px; height:34px; border-radius:10px; background:var(--yellow);
+    border:2px solid var(--node-border); color:#201C15; display:grid; place-items:center;
+    font-size:1rem; font-weight:800;
+  }
+  h3 { font-size:1.05rem; margin:18px 0 8px; }
+  p { margin:8px 0; }
+  ul, ol { margin:8px 0; padding-left:22px; }
+  li { margin:4px 0; }
+  .table-scroll { overflow-x:auto; margin:10px 0; }
+  table { width:100%; border-collapse:collapse; font-size:.93rem; min-width:480px; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--yellow-soft); font-weight:700; }
+  .callout {
+    background:var(--purple-soft); color:var(--purple-ink); border-left:4px solid var(--purple);
+    border-radius:10px; padding:12px 14px; margin:12px 0; font-weight:500;
+  }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin:12px 0; }
+  .card {
+    background:var(--surface-2); border:1.5px solid var(--line); border-radius:12px; padding:14px;
+  }
+  .card b { display:block; margin-bottom:4px; }
+  .card span { color:var(--ink-soft); font-size:.92rem; }
+  code { font-family:ui-monospace,"Cascadia Code",Consolas,monospace; font-size:.9em;
+    background:var(--yellow-soft); padding:1px 5px; border-radius:5px; }
+  /* agent loop */
+  .loop { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; margin:16px 0; }
+  .step {
+    background:var(--surface-2); border:2px solid var(--node-border); border-radius:12px;
+    padding:10px 14px; font-weight:600; font-size:.95rem; text-align:center;
+  }
+  .step.q { background:var(--yellow); color:#201C15; }
+  .arrow { color:var(--ink-soft); font-weight:700; }
+  .back { text-align:center; color:var(--purple-ink); font-size:.9rem; font-weight:600; }
+  .pra { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:12px 0; }
+  .pra .card { text-align:center; }
+  @media (max-width:640px) {
+    .pra { grid-template-columns:1fr; }
+    section { padding:20px 16px; }
+  }
+  footer { text-align:center; color:var(--ink-soft); font-size:.85rem; margin-top:40px; }
+  .theme-btn {
+    position:fixed; top:14px; right:14px; background:var(--surface); color:var(--ink);
+    border:1.5px solid var(--line); border-radius:999px; padding:6px 12px; cursor:pointer; font-size:.85rem;
+  }
+</style>
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Đổi giao diện sáng/tối">◐ Giao diện</button>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Ghi chép khoá học · Udemy</p>
+    <h1><span class="hl">AI Agent</span> cho Beginner</h1>
+    <p class="sub">Đi từ LLM cơ bản tới prompt, tool, workflow, agent loop, multi-agent, framework và cách xử lý khi agent hỏng.</p>
+    <nav class="toc" aria-label="Mục lục">
+      <a href="#llm">1. LLM</a><a href="#prompt">2. Prompt</a><a href="#tool">3. Tool</a>
+      <a href="#workflow">4. Workflow vs Agent</a><a href="#loop">5. Agent loop</a>
+      <a href="#parts">6. 5 thành phần</a><a href="#multi">7. Multi-agent</a>
+      <a href="#patterns">8. Patterns</a><a href="#framework">9. Framework</a><a href="#failure">10. Sự cố</a>
+    </nav>
+  </header>
+
+  <section id="llm">
+    <h2><span class="num">1</span> Nền tảng LLM</h2>
+    <div class="table-scroll"><table>
+      <tr><th>Khái niệm</th><th>Ý chính</th></tr>
+      <tr><td><b>LLM / GPT</b></td><td>Mô hình dự đoán token tiếp theo</td></tr>
+      <tr><td><b>Token</b></td><td>Đơn vị văn bản mô hình đọc và sinh ra, tính phí theo token</td></tr>
+      <tr><td><b>Context window</b></td><td>Giới hạn số token mô hình "nhìn thấy" trong một lần</td></tr>
+      <tr><td><b>Parameters</b></td><td>Kích thước mô hình: lớn hơn thường giỏi hơn nhưng chậm hơn</td></tr>
+      <tr><td><b>Temperature</b></td><td>Thấp thì ổn định, cao thì sáng tạo</td></tr>
+    </table></div>
+    <ul>
+      <li>Gọi qua <b>API / SDK</b> kiểm soát được nhiều hơn chat trên giao diện web.</li>
+      <li><b>Code hay LLM?</b> Cần <i>same input = same output</i> thì viết code. Cần tóm tắt, hiểu ngôn ngữ thì dùng LLM.</li>
+    </ul>
+  </section>
+
+  <section id="prompt">
+    <h2><span class="num">2</span> Prompt</h2>
+    <ul>
+      <li>Ngữ cảnh và ràng buộc càng rõ, kết quả càng hữu ích.</li>
+      <li><b>Chỉ định định dạng đầu ra</b>, đừng bắt mô hình đoán.</li>
+      <li><b>Chain of thought</b>: chia bước 1 → 2 → 3. Kết quả bước trước làm ngữ cảnh cho bước sau.</li>
+    </ul>
+    <h3>3 vai trò trong hội thoại</h3>
+    <div class="grid">
+      <div class="card"><b>user</b><span>Người dùng giao việc</span></div>
+      <div class="card"><b>assistant</b><span>Mô hình trả lời</span></div>
+      <div class="card"><b>system</b><span>Luật chơi đặt trước cho mô hình</span></div>
+    </div>
+    <div class="callout">System message gồm 4 phần: persona · constraints · format · knowledge.</div>
+  </section>
+
+  <section id="tool">
+    <h2><span class="num">3</span> Tool: cho LLM "tay chân"</h2>
+    <p>LLM gốc chỉ sinh văn bản. Gắn tool vào thì nó làm được việc thật: search web, query database, gọi API, thao tác file, chạy code.</p>
+    <div class="grid">
+      <div class="card"><b>name</b><span>Tên tool</span></div>
+      <div class="card"><b>description</b><span>Tool làm gì, khi nào dùng</span></div>
+      <div class="card"><b>parameters</b><span>Đầu vào cần truyền</span></div>
+    </div>
+    <div class="callout">Người định nghĩa tool, LLM quyết định gọi tool nào, dựa vào description. Mô tả rõ thì chọn đúng.</div>
+  </section>
+
+  <section id="workflow">
+    <h2><span class="num">4</span> Workflow vs Agent</h2>
+    <div class="table-scroll"><table>
+      <tr><th></th><th>LLM call</th><th>Workflow</th><th>Agent</th></tr>
+      <tr><td><b>Các bước</b></td><td>1 lần gọi</td><td>Người định sẵn</td><td>Tự hình thành khi làm</td></tr>
+      <tr><td><b>Hợp với</b></td><td>Việc đơn lẻ</td><td>Việc lặp lại, có quy trình</td><td>Việc không có hình dạng cố định</td></tr>
+      <tr><td><b>Đặc tính</b></td><td>Đơn giản</td><td>Dự đoán được</td><td>Linh hoạt, thích ứng</td></tr>
+    </table></div>
+    <ul>
+      <li>Workflow có thể chạy song song: agent tổng chia việc, các agent phụ chạy cùng lúc, rồi gộp lại một kết quả.</li>
+      <li>Agent bám theo <b>mục tiêu</b>, không bám theo chỉ thị từng bước.</li>
+    </ul>
+  </section>
+
+  <section id="loop">
+    <h2><span class="num">5</span> Agent loop</h2>
+    <div class="callout">Agent là LLM chạy trong vòng lặp, dùng tool để đạt mục tiêu, và tự quyết bước tiếp theo dựa trên những gì quan sát được.</div>
+    <div class="loop" role="img" aria-label="Vòng lặp: User task, LLM suy nghĩ, gọi tool, nhận kết quả, xong chưa">
+      <div class="step">User task</div><span class="arrow">→</span>
+      <div class="step">LLM suy nghĩ</div><span class="arrow">→</span>
+      <div class="step">Gọi tool</div><span class="arrow">→</span>
+      <div class="step">Nhận kết quả</div><span class="arrow">→</span>
+      <div class="step q">Xong chưa?</div>
+    </div>
+    <p class="back">Chưa xong → quay lại bước "LLM suy nghĩ" · Xong → trả kết quả</p>
+    <h3>Perceive → Reason → Act</h3>
+    <div class="pra">
+      <div class="card"><b>Perceive</b><span>Nhận user input, tool results, lịch sử hội thoại</span></div>
+      <div class="card"><b>Reason</b><span>Lý luận xem làm gì tiếp</span></div>
+      <div class="card"><b>Act</b><span>Gọi tool hoặc trả lời</span></div>
+    </div>
+    <p>Trong code, loop thường là <code>while True</code>, nên phải có điều kiện thoát rõ ràng.</p>
+  </section>
+
+  <section id="parts">
+    <h2><span class="num">6</span> 5 thành phần của Agent</h2>
+    <div class="grid">
+      <div class="card"><b>1. Model</b><span>Bộ não. Việc đơn giản dùng model nhanh, việc phức tạp dùng model phân tích sâu.</span></div>
+      <div class="card"><b>2. Tools</b><span>Đôi tay, tương tác với thế giới bên ngoài.</span></div>
+      <div class="card"><b>3. Memory</b><span>Bối cảnh, những gì agent nhớ.</span></div>
+      <div class="card"><b>4. Orchestration</b><span>Vòng lặp điều phối, nối các phần lại.</span></div>
+      <div class="card"><b>5. System prompt</b><span>Vai trò, trách nhiệm, rule, cấu hình.</span></div>
+    </div>
+    <h3>Planning: lập luận trước khi hành động</h3>
+    <ul>
+      <li>Nghĩ kế hoạch từng bước, giải thích lý do mỗi lần gọi tool.</li>
+      <li>Giới hạn số vòng lặp (ví dụ tối đa 10 lần).</li>
+      <li>Giới hạn token cho mỗi nhiệm vụ.</li>
+      <li>Hướng dẫn chi tiết, đầu ra có cấu trúc.</li>
+      <li>Theo dõi suy nghĩ của agent: nó đang nghĩ gì, nhận xét gì.</li>
+    </ul>
+  </section>
+
+  <section id="multi">
+    <h2><span class="num">7</span> Multi-agent</h2>
+    <p>Thay vì 1 nhân viên cầm 30 tool, ta có nhiều nhân viên chuyên môn, mỗi người lo 1 việc. Một <b>orchestrator</b> đứng ra chia việc.</p>
+    <h3>3 cách phối hợp</h3>
+    <div class="grid">
+      <div class="card"><b>Song song</b><span>Các agent chạy đồng thời rồi gộp kết quả.</span></div>
+      <div class="card"><b>Tuần tự</b><span>Bước sau phụ thuộc bước trước, có xác minh độ chính xác.</span></div>
+      <div class="card"><b>Tranh luận</b><span>2 agent có quan điểm ngược nhau thảo luận cùng 1 chủ đề.</span></div>
+    </div>
+    <h3>Khi nào nên dùng multi-agent</h3>
+    <ul>
+      <li>1 agent không ôm nổi số tool hoặc lượng kiến thức cần thiết.</li>
+      <li>Nhiệm vụ có các nhiệm vụ con rõ ràng, và chuyên môn hoá mang lại lợi ích.</li>
+      <li>Cần kết hợp nhanh và mạnh: mỗi agent dùng một model khác nhau.</li>
+    </ul>
+    <div class="callout">Single-agent trước: nếu nhiệm vụ rõ ràng và chưa vượt khả năng 1 agent thì đừng chia. Luôn chừa chỗ cho con người tham gia (human-in-the-loop).</div>
+  </section>
+
+  <section id="patterns">
+    <h2><span class="num">8</span> Mẫu thiết kế (patterns)</h2>
+    <ol>
+      <li><b>Augmented LLM</b>: LLM cộng thêm khả năng truy xuất thông tin, dùng tool và ghi nhớ ngữ cảnh.</li>
+      <li><b>Chọn tool</b>: LLM chọn dựa trên description, mô tả rõ thì chọn rõ.</li>
+      <li><b>Đầu ra có cấu trúc.</b></li>
+      <li><b>Guardrails</b>: lớp bảo vệ đầu vào; ở đầu ra thì chặn thông tin sai lệch, sai định dạng, rò rỉ dữ liệu nhạy cảm.</li>
+      <li><b>Human-in-the-loop</b>: phân quyền, người duyệt các bước quan trọng.</li>
+      <li><b>Model dự phòng</b>: Claude, GPT, Gemini thay thế nhau khi một bên gặp lỗi.</li>
+    </ol>
+  </section>
+
+  <section id="framework">
+    <h2><span class="num">9</span> Framework phát triển Agent</h2>
+    <div class="table-scroll"><table>
+      <tr><th>Framework</th><th>Điểm chính</th></tr>
+      <tr><td><b>LangChain</b> (Python, JS)</td><td>Tool use, memory, retrieval, suy luận nhiều bước, chạy trên nhiều nhà cung cấp model</td></tr>
+      <tr><td><b>LangGraph</b></td><td>Nhánh của LangChain theo dạng đồ thị: node là bước, edge là chuyển tiếp, agent đi trên đồ thị theo quyết định của nó</td></tr>
+      <tr><td><b>Anthropic SDK</b></td><td>Client library, không phải full framework: tool use, streaming, hội thoại nhiều lượt. Người dùng vẫn tự viết agent loop</td></tr>
+      <tr><td><b>OpenAI Agents SDK</b></td><td>Agents, tools, <b>handoffs</b> (chuyển việc giữa các agent), run loop tích hợp sẵn</td></tr>
+      <tr><td><b>Google ADK</b></td><td>Agent trên Gemini, graph-based, tích hợp BigQuery, Google Search, Vertex AI</td></tr>
+      <tr><td><b>Mastra</b></td><td>Agent, tools, memory, workflows</td></tr>
+    </table></div>
+  </section>
+
+  <section id="failure">
+    <h2><span class="num">10</span> Sự cố và cách xử lý</h2>
+    <div class="table-scroll"><table>
+      <tr><th>Sự cố</th><th>Cách xử lý</th></tr>
+      <tr><td>Tool call thất bại</td><td>Trả thông báo lỗi về cho agent để nó biết mình đã thất bại</td></tr>
+      <tr><td>Liên tục chọn sai tool</td><td>Sửa description, thêm ví dụ "không dùng tool này cho…" để tránh ảo giác</td></tr>
+      <tr><td>Loop vô hạn</td><td>Đặt số vòng lặp tối đa</td></tr>
+      <tr><td>Context window đầy</td><td>Nén hoặc tóm tắt hội thoại cũ</td></tr>
+      <tr><td>Lỗi model (rate limit, server down, sai định dạng)</td><td>Chuyển sang model dự phòng</td></tr>
+    </table></div>
+    <div class="callout">Chuẩn bị cho thất bại · log mọi thứ · giới hạn loop · thông báo lỗi rõ ràng, dễ hiểu.</div>
+  </section>
+
+  <footer>Ghi chép cá nhân từ khoá Udemy "AI Agent for Beginner" · Trần Ngọc Khánh Long · 10/2026</footer>
+</div>
+<script>
+  (function () {
+    var root = document.documentElement, btn = document.getElementById('themeBtn');
+    try { var saved = localStorage.getItem('theme'); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
+    btn.addEventListener('click', function () {
+      var cur = root.getAttribute('data-theme') ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
